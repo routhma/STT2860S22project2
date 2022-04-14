@@ -1,7 +1,7 @@
 ---
 title: "Becoming a Data Scientist"
 subtitle: "STT2860 S22 Project 02"
-author: "Author: YOUR NAME HERE"
+author: "Author: Macy Routh"
 date: "`r format(Sys.time(), '%A, %B %d, %Y @ %I:%M %p')`"
 output: 
   html_document: 
@@ -12,38 +12,38 @@ output:
 
 **Q1: What is the name of the person interviewed?**
 
-ANSWER:
+ANSWER: David Meza
 
 **Q2: Why did you choose the particular interview you did?**
 
-ANSWER:
+ANSWER: While scrolling through the episodes, I saw that Meza used to work with NASA which made me curious and want to learn more about how that led him to data science, and how much data science is used within NASA.
 
 **Q3: Does the person consider themselves a data scientist?**
 
-ANSWER:
+ANSWER: Meza does consider himself to be a data scientist, however he would call himself a hybird or quasi data scientist because his work entails a lot of different things besides just data science.
 
 **Q4: What is their formal and self-taught education in data science?**
 
-ANSWER:
+ANSWER: He had a standard public education until he went to the University of Houston and got his degree in Management Information Systems where he studied programming and computer science. On his own, he began developing databases and then started really working with them when he landed a job at NASA.
 
 **Q5: What has been their career path? Did they start off in data science?**
 
-ANSWER:
+ANSWER: He was originally going for engineering but after learning about a new programming class, he switched to computer science. After undergrad, he began working as a stock broker for a year before he felt he needed a change and became a Chief Operating Officer for a non-profit for a few years after that. While working for this non-profit, he began to develop databases and got really into it. It was not until he got a job at NASA where he really started to get into data science.
 
 **Q6: What programs/technologies to they use when working in data science?**
 
-ANSWER:
+ANSWER: Meza says that when he was first getting into data science, he was mainly using Microsoft Excel and Access to analyze and visualize information. 
 
 **Q7: What is one interesting (to you) data science problem they have worked on?**
 
-ANSWER:
+ANSWER:I found it really interesting that he was using databases and data science in analyzing training of the divers and astronauts to assess if they are ready for space or not. That is a unique way to use data science that I have not heard of before.
 
 **Q8: Are there any specific pieces of advice they gave that inspire/resonate with you?**
 
-ANSWER:
+ANSWER: One of the best pieces of advices that Meza discusses is to read a lot, and ask questions. He believes one should be reading and learning the main key terms for different programming languages, and to not be afraid to get involved in an area that one does not think is involved with data science, and if it isn't, to not be afraid to talk to who is involved with it to get a better understanding of how it works so you can work together to yield the best results.
 
 **Q9: Was there anything that surprised you or that you particularly identified with?**
 
-ANSWER:
+ANSWER: I was surprised with the variety of fields he worked in after undergrad college and that he did not continue school after graduating. Most people in careers like this have a much more straight path into the field whereas Meza worked in finance and non-profits before he got into more data science involved positions. 
 
 ***

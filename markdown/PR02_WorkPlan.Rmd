@@ -1,7 +1,7 @@
 ---
 title: "Group Work Plan"
 subtitle: "STT2860 S22 Project 02"
-author: "Authors: ALL GROUP MEMBER NAMES HERE"
+author: "Authors: Bradley Freitag, Macy Routh, Jordan Loflin, Cindy Candelario Jose"
 date: "`r format(Sys.time(), '%A, %B %d, %Y @ %I:%M %p')`"
 output: 
   html_document: 
@@ -12,14 +12,14 @@ output:
 
 **Work Plan/Assignments**
 
-ERASE THIS TEXT AND OUTLINE/EXPLAIN YOUR PLAN FOR COMPLETING THE PROJECT WORK
+Since Cindy and Bradley worked on the Galton Data work for the first project, they will complete this project's Galton Data portion of work. Macy and Jordan will work on the Streaming Data portion of work.
 
 **Completion Timeline**
 
-ERASE THIS TEXT AND OUTLINE/EXPLAIN YOUR PLANNED TIMELINE FOR TASK COMLETION
+Ideally, our group would like to have all our work completed before Thursday, April 7th, since that class period will not be dedicated to project work. However, if we do not have all work completed by that date, we are comfortable with having our work completed and submitted no later than the due. 
 
 **Communication Plan**
 
-ERASE THIS TEXT AND OUTLINE/EXPLAIN YOUR PLAN FOR GROUP COMMUNICATION
+Our group will continue communicating through our group text message, with the Group Project #2 forum on AsuLearn being our backup form of communication.
 
 ***

@@ -1,0 +1,31 @@
+---
+title: "Group Project Update"
+subtitle: "STT2860 S22 Project 02"
+author: "Authors: Bradley Freitag, Cindy Candelario Jose, Jordan Loflin, Macy Routh"
+date: "`r format(Sys.time(), '%A, %B %d, %Y @ %I:%M %p')`"
+output: 
+  html_document: 
+    theme: yeti
+    highlight: textmate
+---
+***
+
+**Work Plan/Assignments Update**
+
+Refer back to your original work plan. Has anything changed? Who has completed what portions of the project? Explain.
+
+Most of the code in both the Streaming Data and Galton Data markdown documents are completed, but we will most likely be done either by the end of today's class or within the next few days. Jordan and Macy have been working on the Streaming Data code and Cindy and Bradley have been working on the Galton Data code. Nothing has changed about who's doing what. 
+
+**Completion Timeline Update**
+
+Refer back to your original timeline. Has anything changed? What pieces of the project are done and what are still left to do? Explain.
+
+For all markdown documents, the remainder of the code and the bottom questions need to be completed. The majority of the code has been written and tested. Most of us haven't completed our interview portions of the project yet so that also needs to be done. Altogether, we are on schedule with our original timeline and we are confident that we will have enough time to complete this project, test it, and turn it in. 
+
+**Communication Update**
+
+Refer back to your communication plan. Has anything changed? Has everyone communicated in an effective and timely manner? Explain.
+
+Everyone has been communicating in an effective and timely manner, we have been letting each other know whether we are able or unable to make it in person to Walker Hall and adjusted accordingly. No issues with communication whatsoever. 
+
+***

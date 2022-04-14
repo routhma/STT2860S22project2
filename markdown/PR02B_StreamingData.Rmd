@@ -1,6 +1,6 @@
 ---
 title: "Project 2B: Streaming Data"
-author: "PUT YOUR NAME HERE"
+author: "Macy Routh, Jordan Loflin"
 date: '`r format(Sys.time(), "%A, %B %d, %Y @ %I:%M %p")`'
 output: 
   html_document: 
@@ -23,7 +23,10 @@ knitr::opts_chunk$set(
 ### Packages Used
 
 ```{r loadpackages}
-
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(waffle)
 ```
 
 ### Datasets Used
@@ -35,13 +38,13 @@ The datasets were downloaded from [Disney+ Movies and TV Shows | Kaggle](https:/
 #### Disney+ Dataset
 
 ```{r loaddisneydata}
- 
+disney_data <- read.csv("https://raw.githubusercontent.com/STAT-JET-ASU/STT2860S22project2/main/data/disneypluscontent.csv")
 ```
 
 #### Streaming Dataset
 
 ```{r loadstreamingdata}
-
+stream_data <- read.csv("https://raw.githubusercontent.com/STAT-JET-ASU/STT2860S22project2/main/data/streamingcontent.csv")
 ```
 
 <hr>
@@ -55,7 +58,11 @@ The datasets were downloaded from [Disney+ Movies and TV Shows | Kaggle](https:/
 The Disney+ dataset contains a variable that gives information about the `rating` for each program offering. Convert the variable into a factor that puts the ratings in (roughly) ascending order of age restriction/audience: `TV-Y`, `TV-Y7`, `TV-Y7-FV`, `TV-G`, `G`, `TV-PG`, `PG`, `PG-13`, `TV-14`. If the `date_added` variable is not already in date format, convert it.  
 
 ```{r factorratings}
-
+disney_data <- read_csv("../data/disneypluscontent.csv")
+  
+factor_data <- factor(disney_data$rating)
+new_order_data <- factor(factor_data, levels = c("TV-Y", "TV-Y7", "TV-Y7-FV", "TV-G", "G", "TV-PG", "PG", "PG-13", "TV-14"))
+as.Date(disney_data$date_added, "%m, %d, %y")
 ```
 
 #### Dataset #2
@@ -68,6 +75,14 @@ From the streaming content dataset, create a new dataset by doing the following.
 * Split the `Rotten Tomatoes` variable to separate the show rating from the max of `100`. Convert the show rating to a numerical variable.
 
 ```{r pivotlong}
+dataset <- read_csv("../data/streamingcontent.csv")
+pivoteddata <- pivot_longer(dataset, 
+             cols = c(Netflix, Hulu, `Prime Video`, `Disney+`),
+             names_to = "Services",
+             values_to = "YesNo") %>%
+  filter(YesNo == 1) %>%
+ separate(col = IMDb, into = c('ratingIMDb', 'maxIMDb'), sep = '/') %>%
+ separate(col = `Rotten Tomatoes`, into = c('ratingRT', 'maxRT'), sep = '/')
 
 ```
 
@@ -78,7 +93,17 @@ From the streaming content dataset, create a new dataset by doing the following.
 Create a violin plot of `release_year` (x-axis) grouped by `type` of program (y-axis) for programs on Disney+. Fill with a color of your choice. Add a boxplot inside the violin plot, as you did in one of the DataCamp exercises. Re-scale the x-axis so that tick marks appear at whole-decade intervals (e.g., 1980, 1990, 2000). Add an appropriate title and axis labels. Use other formatting as you choose to enhance effectiveness/appearance.
 
 ```{r violinplot}
-
+disney_data <- read_csv("../data/disneypluscontent.csv")
+disney_data %>%
+ggplot(disney_data, mapping = aes(x = release_year, y = type)) +
+         geom_violin(width = 2, fill = "dodgerblue4") +
+         geom_boxplot(width = 0.5, fill = "dodgerblue2") +
+  coord_flip() +
+  scale_x_discrete(limits = c(1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020), expand = c(0.2, 0)) +
+  facet_wrap(~ type) +
+         labs(title = "Disney Programs Release Year",
+              x = "Release Year",
+              y = "Program Type")
 ```
 
 ### Visualization 2: Waffle Plot
@@ -94,8 +119,14 @@ Create a waffle plot to show the distribution of program `type` on Disney+.
 Hint: Use `round(100 * prop.table(table(DATASETNAME$VARIABLENAME)))` to create the input data for the waffle plot. Swap out the capital letter placeholders for the correct dataset name and variable name.
 
 ```{r waffleplot}
+library(waffle)
+
+waffle(round(100 * prop.table(table(disney_data$type))), rows = 10, keep = TRUE, xlab = "1 square ~ 14", title = "Streaming Content on Disney+", colors = c("#FFEDA0", "#FEB24C"), size = 2, flip = FALSE, glyph_size = 12, legend_pos = "right")
+  
+           
 
 ```
+
 
 ### Visualization 3: Ratings Bar Plot
 
@@ -104,7 +135,13 @@ Hint: Use `round(100 * prop.table(table(DATASETNAME$VARIABLENAME)))` to create t
 Create a horizontal barplot to show the frequencies of the various `rating` categories for programs on Disney+ (i.e., use `y =` rather than `x =` for the variable you are plotting). **You will need to remove a couple `NA` values first.** Facet by `type` so that you have side-by-side plots for the two different program types. Add an appropriate title and axis labels, as well as other formatting to enhance effectiveness/appearance. 
 
 ```{r ratingsbarplot}
-
+ggplot(disney_data, aes(y = new_order_data)) +
+       geom_bar(color = "dodgerblue4" , fill = "dodgerblue4", width = 0.5) +
+      facet_wrap(~ type) +
+  labs(title = "Ratings on Disney+",
+       x = "Frequency",
+       y = "Ratings",)
+  
 ```
 
 ### Visualization 4: Services Bar Plot
@@ -115,6 +152,14 @@ Create a barplot to display how many shows are offered on each of the four strea
 
 ```{r showsbarplot}
 
+ggplot(pivoteddata, aes(x = Services, fill = Services)) + 
+   geom_bar(width = 0.5) +
+ theme(legend.position = "none") +
+    scale_fill_brewer(palette = "BuPu") +
+   labs(title = "Streaming Services Offered",
+       x = "Streaming Services",
+       y = "Number of Shows",)
+
 ```
 
 ### Visualization 5: Choose a Plot!
@@ -122,6 +167,12 @@ Create a barplot to display how many shows are offered on each of the four strea
 Create one other plot of your choice using either dataset to explore a question of interest. You are welcome to perform additional manipulations on the data, if needed. Add an appropriate title and axis labels, as well as any other necessary formatting.
 
 ```{r}
+ggplot(pivoteddata, aes(x = Services)) +
+  geom_bar(aes(fill = Services), width = 0.8, position = position_dodge(2)) +
+  facet_wrap(~ Age, nrow = 2) + scale_fill_brewer(palette = "BuPu")
+  labs(title = "The Number of Movies in Streaming Services by Age",
+    x = "Streaming Services",
+    y = "Number of Downloads")
 
 ```
 
@@ -133,27 +184,30 @@ Create one other plot of your choice using either dataset to explore a question 
 
 **ANSWER**
 
-1)
+1) Disney had not released any tv shows until the late 1960's despite having been releasing movies since the 1920's.
 
-2)
+2) Disney has released much more movies with ratings TV-G, G, TV-PG, and PG than any other ratings.
 
-3)
+3) Disney has the least amount of tv shows offered for streaming in comparison to hulu, netflix, and prime video.
 
-4)
+4) Disney released the most movies and tv shows in the decade of 2010-2020, with tv shows increasing the most in the latter of the decade, and movies increasing the most in the middle of the decade.
 
-5)
+5) Disney has released almost exactly 3 times the amount of movies than they have TV Shows.
 
 **Question 2:** What other data would you like to have, or which existing variables would you like to see transformed, if you were going to do further explorations or visualizations? Give at least two examples.
 
 **ANSWER**
 
-ERASE THIS TEXT AND ANSWER QUESTION HERE
+1. I would have liked to see the data on the different categories provided by different streaming services to if people used certain services for certain genres. This would have also been something I would have liked to cross compare with ages and see the ages, genres, and streaming services together on a chart. 
+2. If I was going to add another visualization for either of the plots it would be a line plot. It would be interesting to see the trends overtime for either data set represented in a line.
 
 **Question 3:** Explain the rationale behind the choices you made with regard to plot type, formatting, and so on, when you created Visualization 5. What motivated your decisions? 
 
 **ANSWER**
 
-***
+For Visualization 5, We chose to do another bar plot for the streaming content. We chose this one because it is the simplest to look at for the different services. We chose to have it be separated by age for that visualization because we were interested to see the differences of Age for each of the streaming services. We think having the data separated by category provides a greater understanding than just seeing the data all together.
+
 ```{r}
 sessionInfo()
 ```
+

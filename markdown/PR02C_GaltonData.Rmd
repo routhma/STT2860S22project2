@@ -1,6 +1,6 @@
 ---
 title: "Project 2C: Galton Data"
-author: "PUT YOUR NAME HERE"
+author: "Bradley Freitag, Cindy Candelario Jose"
 date: '`r format(Sys.time(), "%A, %B %d, %Y @ %I:%M %p")`'
 output: 
   html_document: 
@@ -23,7 +23,8 @@ knitr::opts_chunk$set(
 ### Packages Used
 
 ```{r loadpackages}
-
+library(tidyverse)
+library(readr)
 ```
 
 ### Datasets Used
@@ -35,19 +36,20 @@ Francis Galton, a cousin of Charles Darwin, studied the relationship between par
 #### Galton Main Dataset
 
 ```{r loadmaindata}
-
+galton_main <- read_csv("https://raw.githubusercontent.com/STAT-JET-ASU/Datasets/master/Instructor/galtonfamiliesmain.csv")
 ```
 
 #### Galton Subset Dataset
 
 ```{r loadsubdata}
+galton_sub <- read_csv("https://raw.githubusercontent.com/STAT-JET-ASU/Datasets/master/Instructor/galtonfamiliessub.csv")
 
 ```
 
 #### Galton Notebook Dataset
 
 ```{r loadnotebook}
-
+galton_notebook <- read_csv("https://raw.githubusercontent.com/STAT-JET-ASU/Datasets/master/Instructor/galtonfamiliesnotebook.csv")
 ```
 
 <hr>
@@ -76,15 +78,80 @@ Load the three Galton datasets and use `glimpse()` to explore their structures. 
    * in order of height within each sex of child
 
 ```{r assembledata1}
+glimpse(galton_main)
+glimpse(galton_sub)
+glimpse(galton_notebook)
+
+galton_main1 <- galton_main %>%
+   mutate(
+      FamilyID = as.numeric(ifelse(FamilyID == "136A", 205, FamilyID)), 
+   mother_ht = 1.08 * Mother, 
+   midparent = (mother_ht + Father) / 2,
+   child_ht = if_else(Child == "Daughter", 1.08 * Height, Height)
+   ) %>%
+  rename(father_ht = Father, child_sex = Child, num_children = Children, familyid = FamilyID) %>%
+   select(-Mother, familyid, -Height, num_children, father_ht, mother_ht, midparent, child_sex, child_ht)
+
+head(galton_main1)
+
+galton_sub1 <- galton_sub %>% 
+   mutate(
+         father_ht = FatherR + 60,
+         mother = MotherR + 60,
+         HeightR = HeightR + 60,
+         mother_ht = 1.08 * mother,
+         child_ht = if_else(Child == "Daughter", 1.08 * HeightR, HeightR),
+         midparent = (father_ht + mother_ht) / 2) %>%
+   select(
+       familyid = FamilyID, 
+       num_children = Children,
+       father_ht,
+       -FatherR,
+       -MotherR,
+       -mother, 
+       mother_ht,
+       midparent,
+       child_sex = Child,
+       -HeightR,
+       child_ht)  %>%
+  arrange(familyid,
+          desc(child_sex),
+          desc(child_ht))
+
+head(galton_sub1)
+
+galton_notebook1 <- galton_notebook %>%
+   mutate(
+      familyid = as.numeric(ifelse(FamilyID == "136A", 205, FamilyID))) %>%
+   select(familyid, page = Page)
+ 
+head(galton_notebook1)
+
+galton_mainsub <- bind_rows(galton_main1, galton_sub1)
+
+head(galton_mainsub)
+
+galton_dataset1 <- full_join(galton_mainsub, galton_notebook1, by = "familyid") %>%
+   arrange(familyid,
+           desc(child_sex),
+           desc(child_ht))
+
+head(galton_dataset1)
 
 ```
+
 
 #### Dataset #2
 
 From Dataset #1, select the variables `familyid` and `num_children`, then reduce the dataset so it contains only one unique row per family. Use `glimpse()` to display the result. (Hint: The final dataset should have 205 rows/observations and two variables/columns.)
 
 ```{r assembledata2}
-
+galton_dataset2 <- galton_dataset1 %>%
+   select(familyid, num_children) %>% 
+   distinct()
+   
+glimpse(galton_dataset2)
+head(galton_dataset2)
 ```
 
 ### Visualization 1: Updated Scatterplot
@@ -118,7 +185,17 @@ Include the following.
 * use `theme()` to move the legend to the bottom of the scatterplot
 
 ```{r updatedscatterplot}
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
+ggplot(galton_dataset1, mapping = aes(child_ht, midparent, size = 3, alpha = 0.3, color = child_sex)) + 
+   geom_point() + 
+   scale_color_manual(values = cbPalette) + 
+   scale_x_continuous(breaks = seq(60, 80, by = 1)) +
+   scale_y_continuous(breaks = seq(60, 80, by = 1)) + 
+   coord_fixed() + 
+   labs(title = "Average Height between Parents compared to Height of their Children in inches", x = "Height of Children in inches", y = "Average Height of Parents in inches", color = "gender of child") + 
+   theme_linedraw() + 
+   theme(legend.position = "bottom")
 ```
 
 ### Visualization 2: Number of Children
@@ -128,7 +205,15 @@ Include the following.
 Create a barplot to show the distribution of the number of children per family. Set the bars to something other than the default `width`. Scale the x-axis so that there is a tick mark for each bar. Choose appropriate colors, labels, themes, and/or and other types of formatting that you feel will enhance the meaning or visual appearance of the plot.  (Hint: Use `count()` to find out how many families have a given number of children, then use that information to create your plot.)
 
 ```{r childrenbarplot}
+galton_children <- galton_dataset2 %>% count(num_children)
 
+ggplot(galton_children, aes(x = num_children, weight = n, width = 10)) + geom_bar(color = "blue", fill = "skyblue")+
+   labs(title = "Number of Children Per Family",
+       x = "Number of Children",
+       y = "Frequency") + 
+    scale_x_discrete(limits = seq(1, 15, 1)) + 
+    scale_y_continuous(breaks = seq(0, 40, 2))
+    scale_fill_manual(values = c())
 ```
 
 <hr>
@@ -139,19 +224,19 @@ Create a barplot to show the distribution of the number of children per family. 
 
 **ANSWER**
 
-ERASE THIS TEXT AND ANSWER QUESTION HERE
+Despite the inherent muddiness of my graph and its central points, graphing Galton's data on a cartesian plane better visualizes the data than Galton's asymmetric polar plane diagram. The cartesian plane is more sensible for comparing the two variables, since both variables are now on linear axes as opposed to one variable. My graph's overall sizing and aspect could be better, but I am still somewhat unfamiliar with the nuances of the best data visualization practices with ggplot2. Additionally, I had difficulty using the `scale_*_continuous` functions to make the axes start on the same number. However, I still consider my graph more cohesive and useful than Galton's original diagram.
 
 **Question 2:** Explain the rationale behind the choices you made when creating your scatterplot and barplot, such as size, color, transparency, or other features. What motivated your decisions? 
 
 **ANSWER**
 
-ERASE THIS TEXT AND ANSWER QUESTION HERE
+The ultimate motivation for the decisions made while creating each plot was presenting the data in an organized and understandable way. For clarity and visibility, the default size and width of the dots and bars were not used. Instead, we increased the size and width of the dots and bars. The colors we chose for each plot allow the data to be presented in a colorful way to capture one's attention. Specifically, for the scatterplot color is important to differentiate the gender of the children. The blue outline for the bars allows the barplot to be colorblind safe because it is different from the filled-in color of the bars. Additionally, the gridlines in each plot help keep the data aligned and organized. 
 
 **Question 3:** Considering best practices, how does using `coord_fixed()` enhance the authenticity of the information shown in the scatterplot, such as the relationship and spread of the data?
 
 **ANSWER**
 
-ERASE THIS TEXT AND ANSWER QUESTION HERE
+Using `coord_fixed()`ensures that the size of individual graph units on the x-axis is equivalent to the size of individual graph units on the y-axis. Thus, the equivalency of the axes accurately displays the data. By fixing the aspect ratio to equivalent measurements, the value of each observation is relative to each variable's measurement and, thanks to the transformation of the height units for mothers and daughters, accurately depicts a visual representation of child height compared to midparent height. The relationship between the variables in inches applies Galton's data authentically, as opposed to the polar diagram.
 
 ***
 ```{r}
